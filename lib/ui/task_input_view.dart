@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_management_app/models/task.dart';
-import 'package:task_management_app/services/firebase_service.dart';
+import 'package:task_management_app/model/task.dart';
+import 'package:task_management_app/service/firebase_service.dart';
 
 class TaskInputView extends StatefulWidget {
   const TaskInputView({super.key});
@@ -18,7 +18,6 @@ class _TaskInputViewState extends State<TaskInputView> {
   final TextEditingController _timeFromcontroller = TextEditingController();
   final TextEditingController _timeTocontroller = TextEditingController();
   final TextEditingController _namecontroller = TextEditingController();
-  final TextEditingController _descriptioncontroller = TextEditingController();
   final TextEditingController _tagcontroller = TextEditingController();
 
   final FirebaseService _firebaseService = FirebaseService();
@@ -64,7 +63,6 @@ class _TaskInputViewState extends State<TaskInputView> {
     final task = Task(
         createdAt: DateTime.timestamp().microsecondsSinceEpoch,
         name: _namecontroller.text,
-        description: _descriptioncontroller.text,
         date: _date!,
         timeFrom: _timeFrom!,
         timeTo: _timeTo!);
@@ -75,7 +73,6 @@ class _TaskInputViewState extends State<TaskInputView> {
     _timeFromcontroller.clear();
     _timeTocontroller.clear();
     _namecontroller.clear();
-    _descriptioncontroller.clear();
     _tagcontroller.clear();
     _date = null;
     _timeFrom = null;
@@ -92,10 +89,6 @@ class _TaskInputViewState extends State<TaskInputView> {
             TextField(
               controller: _namecontroller,
               decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            TextField(
-              controller: _descriptioncontroller,
-              decoration: const InputDecoration(labelText: 'Description'),
             ),
             TextField(
               controller: _datecontroller,

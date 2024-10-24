@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/task.dart';
+import 'package:task_management_app/model/task.dart';
 
 class FirebaseService {
   final CollectionReference _taskCollection = FirebaseFirestore.instance.collection('tasks');

@@ -4,39 +4,31 @@ import 'package:intl/intl.dart';
 class Task {
   int createdAt;
   String name;
-  String description;
   DateTime date;
   TimeOfDay timeFrom;
   TimeOfDay timeTo;
-  bool isCompleted;
 
   Task({
     required this.createdAt,
     required this.name,
-    required this.description,
     required this.date,
     required this.timeFrom,
-    required this.timeTo,
-    this.isCompleted = false,
+    required this.timeTo
   });
 
   factory Task.fromJson(Map<String, dynamic> data) => Task(
       createdAt: data['created_at'],
       name: data['name'],
-      description: data['description'],
       date: DateTime.parse(data['date']),
       timeFrom: _stringToTime(data['timeFrom']),
-      timeTo: _stringToTime(data['timeTo']),
-      isCompleted: data['isCompleted']);
+      timeTo: _stringToTime(data['timeTo']));
 
   Map<String, dynamic> toJson() => {
         'created_at': createdAt,
         'name': name,
-        'description': description,
         'date': date.toIso8601String(),
         'timeFrom': _timeToString(timeFrom),
-        'timeTo': _timeToString(timeTo),
-        'isCompleted': isCompleted
+        'timeTo': _timeToString(timeTo)
       };
 }
 
