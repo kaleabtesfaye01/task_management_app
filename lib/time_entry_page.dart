@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,8 @@ class _TimeEntryPageState extends State<TimeEntryPage> {
 
   final _taskController = TextEditingController();
   final _tagController = TextEditingController();
+
+  FirebaseFirestore? _db;
 
   // modules
   Future<void> _selectDate(BuildContext context) async {
@@ -54,6 +57,58 @@ class _TimeEntryPageState extends State<TimeEntryPage> {
         _toTime = picked;
       });
     }
+  }
+
+  Future<void> _initDB() async {
+    // initialize database
+    _db = FirebaseFirestore.instance;
+  }
+
+  Future<void> _saveEntry(BuildContext context) async {
+    // save entry to database
+    if (_db == null) {
+      await _initDB();
+    }
+
+    final task = _taskController.text;
+    final tag = _tagController.text;
+
+    if (task.isEmpty || _selectedDate == null || _fromTime == null || _toTime == null) {
+      return;
+    }
+
+    final fromDateTime = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _fromTime!.hour,
+      _fromTime!.minute,
+    );
+
+    final toDateTime = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _toTime!.hour,
+      _toTime!.minute,
+    );
+
+    final entry = <String, dynamic>{
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'task': task,
+      'from': fromDateTime,
+      'to': toDateTime,
+      'tag': tag,
+    };
+
+    await _db!.collection('entries').add(entry).then((DocumentReference doc) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Entry saved successfully'),
+        ));
+      }
+    });
   }
 
   // UI
@@ -146,37 +201,8 @@ class _TimeEntryPageState extends State<TimeEntryPage> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () => showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Task Details'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text('Task: ${_taskController.text}'),
-                        const SizedBox(height: 10),
-                        Text('Date: ${_selectedDate == null ? '' : DateFormat.yMd().format(_selectedDate!)}'),
-                        const SizedBox(height: 10),
-                        Text('From: ${_fromTime == null ? '' : _fromTime!.format(context)}'),
-                        const SizedBox(height: 10),
-                        Text('To: ${_toTime == null ? '' : _toTime!.format(context)}'),
-                        const SizedBox(height: 10),
-                        Text('Tag: ${_tagController.text}'),
-                      ],
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Close'),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              child: const Text('Save'),
+              onPressed: () => _saveEntry(context),
+              child: const Text('Save Entry'),
             ),
           ],
         ),

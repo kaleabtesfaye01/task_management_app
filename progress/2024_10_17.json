@@ -1,0 +1,173 @@
+{
+  "header": {
+    "cloc_url": "github.com/AlDanial/cloc",
+    "cloc_version": "2.02",
+    "elapsed_seconds": 16.0138511657715,
+    "n_files": 2497,
+    "n_lines": 821420,
+    "files_per_second": 155.927513884803,
+    "lines_per_second": 51294.3445956167
+  },
+  "C/C++ Header": {
+    "nFiles": 2062,
+    "blank": 46806,
+    "comment": 106529,
+    "code": 314812
+  },
+  "XML": {
+    "nFiles": 208,
+    "blank": 319,
+    "comment": 47,
+    "code": 295640
+  },
+  "JSON": {
+    "nFiles": 19,
+    "blank": 3,
+    "comment": 0,
+    "code": 22605
+  },
+  "C++": {
+    "nFiles": 46,
+    "blank": 1358,
+    "comment": 1074,
+    "code": 8564
+  },
+  "Swift": {
+    "nFiles": 47,
+    "blank": 930,
+    "comment": 1928,
+    "code": 3489
+  },
+  "Markdown": {
+    "nFiles": 12,
+    "blank": 706,
+    "comment": 1,
+    "code": 2602
+  },
+  "Objective-C": {
+    "nFiles": 35,
+    "blank": 564,
+    "comment": 699,
+    "code": 2550
+  },
+  "C": {
+    "nFiles": 3,
+    "blank": 392,
+    "comment": 273,
+    "code": 1922
+  },
+  "Pascal": {
+    "nFiles": 13,
+    "blank": 356,
+    "comment": 2224,
+    "code": 910
+  },
+  "Bourne Shell": {
+    "nFiles": 9,
+    "blank": 140,
+    "comment": 66,
+    "code": 898
+  },
+  "PHP": {
+    "nFiles": 10,
+    "blank": 229,
+    "comment": 557,
+    "code": 546
+  },
+  "CMake": {
+    "nFiles": 7,
+    "blank": 82,
+    "comment": 110,
+    "code": 346
+  },
+  "Dart": {
+    "nFiles": 5,
+    "blank": 35,
+    "comment": 33,
+    "code": 304
+  },
+  "Bourne Again Shell": {
+    "nFiles": 1,
+    "blank": 19,
+    "comment": 20,
+    "code": 121
+  },
+  "Gradle": {
+    "nFiles": 3,
+    "blank": 12,
+    "comment": 10,
+    "code": 71
+  },
+  "Windows Resource File": {
+    "nFiles": 1,
+    "blank": 23,
+    "comment": 29,
+    "code": 69
+  },
+  "DOS Batch": {
+    "nFiles": 1,
+    "blank": 24,
+    "comment": 2,
+    "code": 64
+  },
+  "Fortran 77": {
+    "nFiles": 1,
+    "blank": 2,
+    "comment": 0,
+    "code": 56
+  },
+  "YAML": {
+    "nFiles": 3,
+    "blank": 17,
+    "comment": 82,
+    "code": 27
+  },
+  "Java": {
+    "nFiles": 1,
+    "blank": 3,
+    "comment": 5,
+    "code": 21
+  },
+  "HTML": {
+    "nFiles": 1,
+    "blank": 7,
+    "comment": 12,
+    "code": 19
+  },
+  "Text": {
+    "nFiles": 1,
+    "blank": 5,
+    "comment": 0,
+    "code": 15
+  },
+  "Ruby": {
+    "nFiles": 1,
+    "blank": 1,
+    "comment": 6,
+    "code": 11
+  },
+  "Properties": {
+    "nFiles": 3,
+    "blank": 0,
+    "comment": 0,
+    "code": 10
+  },
+  "D": {
+    "nFiles": 3,
+    "blank": 0,
+    "comment": 0,
+    "code": 3
+  },
+  "Kotlin": {
+    "nFiles": 1,
+    "blank": 2,
+    "comment": 0,
+    "code": 3
+  },
+  "SUM": {
+    "blank": 52035,
+    "comment": 113707,
+    "code": 655678,
+    "nFiles": 2497
+  }
+}
