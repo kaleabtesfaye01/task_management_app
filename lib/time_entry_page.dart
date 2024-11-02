@@ -116,7 +116,7 @@ class _TimeEntryPageState extends State<TimeEntryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Time Entry'),
+        title: const Text('Input Time Entry'),
       ),
       body: SafeArea(
         child: Column(
