@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:task_management_app/firebase_options.dart';
 import 'package:task_management_app/query_input_page.dart';
 import 'package:task_management_app/entry_input_page.dart';
 import 'package:task_management_app/time_entry_card.dart';
