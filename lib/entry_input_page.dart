@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class TimeEntryPage extends StatefulWidget {
-  const TimeEntryPage({super.key});
+class EntryInputPage extends StatefulWidget {
+  const EntryInputPage({super.key});
 
   @override
-  State<TimeEntryPage> createState() => _TimeEntryPageState();
+  State<EntryInputPage> createState() => _EntryInputPageState();
 }
 
-class _TimeEntryPageState extends State<TimeEntryPage> {
+class _EntryInputPageState extends State<EntryInputPage> {
   // variables
   DateTime? _selectedDate;
   TimeOfDay? _fromTime;
@@ -107,8 +107,17 @@ class _TimeEntryPageState extends State<TimeEntryPage> {
         const SnackBar(
           content: Text('Entry saved successfully'),
         ));
+        Navigator.pop(context);
       }
     });
+  }
+
+  // lifecycle
+  @override
+  void dispose() {
+    _taskController.dispose();
+    _tagController.dispose();
+    super.dispose();
   }
 
   // UI

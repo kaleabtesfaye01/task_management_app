@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:task_management_app/firebase_options.dart';
-import 'package:task_management_app/query_input_page.dart';
+import 'package:task_management_app/query_result_page.dart';
 
 Future<void> main() async{
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Task Management App',
-      home: QueryInputPage(),
+      home: QueryResultPage(),
     );
   }
 }

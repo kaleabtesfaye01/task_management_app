@@ -10,10 +10,10 @@ class QueryInputPage extends StatefulWidget {
 
 class _QueryInputPageState extends State<QueryInputPage> {
   // variables
-  DateTime? _selectedDate;
   final List<String> _queryItems = <String>['Date', 'Task', 'Tag'];
   late String _selectedQuery;
   final _textController = TextEditingController();
+  final _dateController = TextEditingController();
 
   @override
   void initState() {
@@ -31,9 +31,17 @@ class _QueryInputPageState extends State<QueryInputPage> {
     );
     if (picked != null) {
       setState(() {
-        _selectedDate = picked;
+        _dateController.text = DateFormat.yMd().format(picked);
       });
     }
+  }
+
+  // lifecycle
+  @override
+  void dispose() {
+    _textController.dispose();
+    _dateController.dispose();
+    super.dispose();
   }
 
   // UI
@@ -82,10 +90,7 @@ class _QueryInputPageState extends State<QueryInputPage> {
                           border: OutlineInputBorder(),
                           suffixIcon: Icon(Icons.calendar_today),
                         ),
-                        controller: TextEditingController(
-                            text: _selectedDate == null
-                                ? ''
-                                : DateFormat.yMd().format(_selectedDate!)),
+                        controller: _dateController,
                         readOnly: true,
                       ),
                     ),
@@ -104,7 +109,15 @@ class _QueryInputPageState extends State<QueryInputPage> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                final result = {
+                  'query': _selectedQuery,
+                  'value': _selectedQuery == 'Date'
+                      ? _dateController.text
+                      : _textController.text
+                };
+                Navigator.pop(context, result);
+              },
               child: const Text('Query'),
             ),
           ],
