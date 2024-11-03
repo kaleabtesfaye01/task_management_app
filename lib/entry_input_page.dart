@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:task_management_app/time_entry.dart';
 
 class EntryInputPage extends StatefulWidget {
-  const EntryInputPage({super.key});
+  const EntryInputPage({super.key, this.entry});
+
+  final TimeEntry? entry;
 
   @override
   State<EntryInputPage> createState() => _EntryInputPageState();
@@ -12,28 +14,64 @@ class EntryInputPage extends StatefulWidget {
 
 class _EntryInputPageState extends State<EntryInputPage> {
   // variables
-  DateTime? _selectedDate;
-  TimeOfDay? _fromTime;
-  TimeOfDay? _toTime;
-
   final _taskController = TextEditingController();
   final _tagController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _fromTimeController = TextEditingController();
+  final _toTimeController = TextEditingController();
+
+  TimeOfDay? _fromTime;
+  TimeOfDay? _toTime;
+  DateTime? _date;
 
   FirebaseFirestore? _db;
 
-  TimeEntry? _entry;
-
   // modules
+  @override
+  void initState() {
+    super.initState();
+    if (widget.entry != null) {
+      _date = widget.entry!.date;
+      _fromTime = TimeOfDay.fromDateTime(widget.entry!.from);
+      _toTime = TimeOfDay.fromDateTime(widget.entry!.to);
+
+      _taskController.text = widget.entry!.task;
+      _tagController.text = widget.entry!.tag;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.entry != null) {
+      _dateController.text = DateFormat('yyyy-MM-dd').format(_date!);
+      _fromTimeController.text = _fromTime!.format(context);
+      _toTimeController.text = _toTime!.format(context);
+    }
+  }
+
+  // lifecycle
+  @override
+  void dispose() {
+    _taskController.dispose();
+    _tagController.dispose();
+    _dateController.dispose();
+    _fromTimeController.dispose();
+    _toTimeController.dispose();
+    super.dispose();
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: _date ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != _date) {
       setState(() {
-        _selectedDate = picked;
+        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _date = picked;
       });
     }
   }
@@ -45,6 +83,7 @@ class _EntryInputPageState extends State<EntryInputPage> {
     );
     if (picked != null && picked != _fromTime) {
       setState(() {
+        _fromTimeController.text = picked.format(context);
         _fromTime = picked;
       });
     }
@@ -55,8 +94,9 @@ class _EntryInputPageState extends State<EntryInputPage> {
       context: context,
       initialTime: _toTime ?? TimeOfDay.now(),
     );
-    if (picked != null && picked != _toTime) {
+    if (picked != null) {
       setState(() {
+        _toTimeController.text = picked.format(context);
         _toTime = picked;
       });
     }
@@ -76,34 +116,36 @@ class _EntryInputPageState extends State<EntryInputPage> {
     final task = _taskController.text;
     final tag = _tagController.text;
 
-    if (task.isEmpty ||
-        _selectedDate == null ||
-        _fromTime == null ||
-        _toTime == null) {
+    if (task.isEmpty || tag.isEmpty || _date == null || _fromTime == null || _toTime == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please fill all fields'),
+        ));
+      }
       return;
     }
 
     final fromDateTime = DateTime(
-      _selectedDate!.year,
-      _selectedDate!.month,
-      _selectedDate!.day,
+      _date!.year,
+      _date!.month,
+      _date!.day,
       _fromTime!.hour,
       _fromTime!.minute,
     );
 
     final toDateTime = DateTime(
-      _selectedDate!.year,
-      _selectedDate!.month,
-      _selectedDate!.day,
+      _date!.year,
+      _date!.month,
+      _date!.day,
       _toTime!.hour,
       _toTime!.minute,
     );
 
-    _entry = TimeEntry(
+    TimeEntry entry = TimeEntry(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       task: task,
       tag: tag,
-      date: _selectedDate!,
+      date: _date!,
       from: fromDateTime,
       to: toDateTime,
     );
@@ -114,8 +156,9 @@ class _EntryInputPageState extends State<EntryInputPage> {
           fromFirestore: TimeEntry.fromFirestore,
           toFirestore: (TimeEntry entry, options) => entry.toFirestore(),
         )
-        .add(_entry!)
-        .then((DocumentReference doc) {
+        .doc(widget.entry == null ? entry.id : widget.entry!.id)
+        .set(entry)
+        .then((_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Entry saved successfully'),
@@ -123,14 +166,6 @@ class _EntryInputPageState extends State<EntryInputPage> {
         Navigator.pop(context);
       }
     });
-  }
-
-  // lifecycle
-  @override
-  void dispose() {
-    _taskController.dispose();
-    _tagController.dispose();
-    super.dispose();
   }
 
   // UI
@@ -161,10 +196,7 @@ class _EntryInputPageState extends State<EntryInputPage> {
                     border: OutlineInputBorder(),
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
-                  controller: TextEditingController(
-                      text: _selectedDate == null
-                          ? ''
-                          : DateFormat.yMd().format(_selectedDate!)),
+                  controller: _dateController,
                   readOnly: true,
                 ),
               ),
@@ -182,10 +214,7 @@ class _EntryInputPageState extends State<EntryInputPage> {
                           border: OutlineInputBorder(),
                           suffixIcon: Icon(Icons.access_time),
                         ),
-                        controller: TextEditingController(
-                            text: _fromTime == null
-                                ? ''
-                                : _fromTime!.format(context)),
+                        controller: _fromTimeController,
                         readOnly: true,
                       ),
                     ),
@@ -202,10 +231,7 @@ class _EntryInputPageState extends State<EntryInputPage> {
                           border: OutlineInputBorder(),
                           suffixIcon: Icon(Icons.access_time),
                         ),
-                        controller: TextEditingController(
-                            text: _toTime == null
-                                ? ''
-                                : _toTime!.format(context)),
+                        controller: _toTimeController,
                         readOnly: true,
                       ),
                     ),

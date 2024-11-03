@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:task_management_app/entry_input_page.dart';
 import 'package:task_management_app/time_entry.dart';
 
 class TimeEntryCard extends StatefulWidget {
@@ -8,10 +9,12 @@ class TimeEntryCard extends StatefulWidget {
     super.key,
     required this.entry,
     required this.onDelete,
+    required this.onEdit,
   });
 
   final TimeEntry entry;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   @override
   _TimeEntryCardState createState() => _TimeEntryCardState();
@@ -28,7 +31,7 @@ class _TimeEntryCardState extends State<TimeEntryCard> {
     if (_db == null) {
       await _initDB();
     }
-    
+
     await _db!.collection('entries').doc(widget.entry.id).delete();
     widget.onDelete();
   }
@@ -47,8 +50,14 @@ class _TimeEntryCardState extends State<TimeEntryCard> {
           Row(
             children: <Widget>[
               TextButton(
-                onPressed: () {
-                  // Edit functionality
+                onPressed: () async{
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EntryInputPage(entry: widget.entry),
+                    ),
+                  );
+                  widget.onEdit();
                 },
                 child: const Text('Edit'),
               ),

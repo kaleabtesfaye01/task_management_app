@@ -104,7 +104,10 @@ class _QueryResultPageState extends State<QueryResultPage> {
               onDelete: () async {
                 await _getEntries();
               },
-              );
+              onEdit: () async {
+                await _getEntries();
+              },
+            );
           },
         ),
       ),
@@ -113,7 +116,7 @@ class _QueryResultPageState extends State<QueryResultPage> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const EntryInputPage(),
+              builder: (context) => EntryInputPage(),
             ),
           );
           await _getEntries();
