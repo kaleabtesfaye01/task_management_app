@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:task_management_app/time_entry.dart';
 
 class EntryInputPage extends StatefulWidget {
   const EntryInputPage({super.key});
@@ -19,6 +20,8 @@ class _EntryInputPageState extends State<EntryInputPage> {
   final _tagController = TextEditingController();
 
   FirebaseFirestore? _db;
+
+  TimeEntry? _entry;
 
   // modules
   Future<void> _selectDate(BuildContext context) async {
@@ -73,7 +76,10 @@ class _EntryInputPageState extends State<EntryInputPage> {
     final task = _taskController.text;
     final tag = _tagController.text;
 
-    if (task.isEmpty || _selectedDate == null || _fromTime == null || _toTime == null) {
+    if (task.isEmpty ||
+        _selectedDate == null ||
+        _fromTime == null ||
+        _toTime == null) {
       return;
     }
 
@@ -93,18 +99,25 @@ class _EntryInputPageState extends State<EntryInputPage> {
       _toTime!.minute,
     );
 
-    final entry = <String, dynamic>{
-      'id': DateTime.now().millisecondsSinceEpoch.toString(),
-      'task': task,
-      'from': fromDateTime,
-      'to': toDateTime,
-      'tag': tag,
-    };
+    _entry = TimeEntry(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      task: task,
+      tag: tag,
+      date: _selectedDate!,
+      from: fromDateTime,
+      to: toDateTime,
+    );
 
-    await _db!.collection('entries').add(entry).then((DocumentReference doc) {
+    await _db!
+        .collection('entries')
+        .withConverter(
+          fromFirestore: TimeEntry.fromFirestore,
+          toFirestore: (TimeEntry entry, options) => entry.toFirestore(),
+        )
+        .add(_entry!)
+        .then((DocumentReference doc) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Entry saved successfully'),
         ));
         Navigator.pop(context);

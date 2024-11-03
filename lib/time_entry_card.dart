@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:task_management_app/time_entry.dart';
 
 class TimeEntryCard extends StatelessWidget {
-  const TimeEntryCard({super.key});
+  final TimeEntry entry;
 
-  // dummy time-entry date
-  final String _date = '2021-10-10';
-  final String _task = 'Task 1';
-  final String _tag = 'Tag 1';
-  final String _from = '10:00';
-  final String _to = '12:00';
+  const TimeEntryCard({
+    super.key,
+    required this.entry,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +16,11 @@ class TimeEntryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Task: $_task'),
-          Text('Tag: $_tag'),
-          Text('Date: $_date'),
-          Text('From: $_from'),
-          Text('To: $_to'),
+          Text('Task: ${entry.task}'),
+          Text('Tag: ${entry.tag}'),
+          Text('Date: ${DateFormat.yMd().format(entry.date)}'),
+          Text('From: ${DateFormat.Hm().format(entry.from)}'),
+          Text('To: ${DateFormat.Hm().format(entry.to)}'),
           Row(
             children: <Widget>[
               TextButton(

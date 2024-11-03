@@ -15,12 +15,6 @@ class _QueryInputPageState extends State<QueryInputPage> {
   final _textController = TextEditingController();
   final _dateController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedQuery = _queryItems.first;
-  }
-
   // modules
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -31,12 +25,18 @@ class _QueryInputPageState extends State<QueryInputPage> {
     );
     if (picked != null) {
       setState(() {
-        _dateController.text = DateFormat.yMd().format(picked);
+        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
       });
     }
   }
 
   // lifecycle
+  @override
+  void initState() {
+    super.initState();
+    _selectedQuery = _queryItems.first;
+  }
+
   @override
   void dispose() {
     _textController.dispose();
@@ -81,20 +81,21 @@ class _QueryInputPageState extends State<QueryInputPage> {
                 const SizedBox(width: 10),
                 if (_selectedQuery == 'Date')
                   Expanded(
-                      child: GestureDetector(
-                    onTap: () => _selectDate(context),
-                    child: AbsorbPointer(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Date',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today),
+                    child: GestureDetector(
+                      onTap: () => _selectDate(context),
+                      child: AbsorbPointer(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            labelText: 'Date',
+                            border: OutlineInputBorder(),
+                            suffixIcon: Icon(Icons.calendar_today),
+                          ),
+                          controller: _dateController,
+                          readOnly: true,
                         ),
-                        controller: _dateController,
-                        readOnly: true,
                       ),
                     ),
-                  ))
+                  )
                 else
                   Expanded(
                     child: TextField(
@@ -111,7 +112,7 @@ class _QueryInputPageState extends State<QueryInputPage> {
             ElevatedButton(
               onPressed: () {
                 final result = {
-                  'query': _selectedQuery,
+                  'query': _selectedQuery.toLowerCase(),
                   'value': _selectedQuery == 'Date'
                       ? _dateController.text
                       : _textController.text
