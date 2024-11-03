@@ -99,7 +99,12 @@ class _QueryResultPageState extends State<QueryResultPage> {
         child: ListView.builder(
           itemCount: _entries?.length ?? 0,
           itemBuilder: (context, index) {
-            return TimeEntryCard(entry: _entries![index]);
+            return TimeEntryCard(
+              entry: _entries![index],
+              onDelete: () async {
+                await _getEntries();
+              },
+              );
           },
         ),
       ),
