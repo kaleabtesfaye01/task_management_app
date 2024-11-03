@@ -116,7 +116,11 @@ class _EntryInputPageState extends State<EntryInputPage> {
     final task = _taskController.text;
     final tag = _tagController.text;
 
-    if (task.isEmpty || tag.isEmpty || _date == null || _fromTime == null || _toTime == null) {
+    if (task.isEmpty ||
+        tag.isEmpty ||
+        _date == null ||
+        _fromTime == null ||
+        _toTime == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please fill all fields'),

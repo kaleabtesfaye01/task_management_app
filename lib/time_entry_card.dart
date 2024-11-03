@@ -17,7 +17,7 @@ class TimeEntryCard extends StatefulWidget {
   final VoidCallback onEdit;
 
   @override
-  _TimeEntryCardState createState() => _TimeEntryCardState();
+  State<TimeEntryCard> createState() => _TimeEntryCardState();
 }
 
 class _TimeEntryCardState extends State<TimeEntryCard> {
@@ -50,7 +50,7 @@ class _TimeEntryCardState extends State<TimeEntryCard> {
           Row(
             children: <Widget>[
               TextButton(
-                onPressed: () async{
+                onPressed: () async {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(

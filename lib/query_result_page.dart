@@ -116,7 +116,7 @@ class _QueryResultPageState extends State<QueryResultPage> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => EntryInputPage(),
+              builder: (context) => const EntryInputPage(),
             ),
           );
           await _getEntries();
