@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:task_management_app/data/repository.dart';
 import 'package:task_management_app/entry_input_page.dart';
-import 'package:task_management_app/time_entry.dart';
+import 'package:task_management_app/model/time_entry.dart';
 
 class TimeEntryCard extends StatefulWidget {
   const TimeEntryCard({
@@ -21,19 +21,22 @@ class TimeEntryCard extends StatefulWidget {
 }
 
 class _TimeEntryCardState extends State<TimeEntryCard> {
-  FirebaseFirestore? _db;
-
-  Future<void> _initDB() async {
-    _db = FirebaseFirestore.instance;
-  }
+  final _repository = Repository();
 
   Future<void> _deleteEntry() async {
-    if (_db == null) {
-      await _initDB();
-    }
-
-    await _db!.collection('entries').doc(widget.entry.id).delete();
-    widget.onDelete();
+    _repository.deleteEntry(widget.entry.id).then((response) {
+      if (response.success) {
+        widget.onDelete();
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Error deleting entry'),
+            ),
+          );
+        }
+      }
+    });
   }
 
   @override

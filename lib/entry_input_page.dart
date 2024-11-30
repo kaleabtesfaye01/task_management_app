@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:task_management_app/time_entry.dart';
+import 'package:task_management_app/data/repository.dart';
+import 'package:task_management_app/model/time_entry.dart';
 
 class EntryInputPage extends StatefulWidget {
   const EntryInputPage({super.key, this.entry});
@@ -14,6 +14,7 @@ class EntryInputPage extends StatefulWidget {
 
 class _EntryInputPageState extends State<EntryInputPage> {
   // variables
+  final _repository = Repository();
   final _taskController = TextEditingController();
   final _tagController = TextEditingController();
   final _dateController = TextEditingController();
@@ -23,8 +24,6 @@ class _EntryInputPageState extends State<EntryInputPage> {
   TimeOfDay? _fromTime;
   TimeOfDay? _toTime;
   DateTime? _date;
-
-  FirebaseFirestore? _db;
 
   // modules
   @override
@@ -102,17 +101,7 @@ class _EntryInputPageState extends State<EntryInputPage> {
     }
   }
 
-  Future<void> _initDB() async {
-    // initialize database
-    _db = FirebaseFirestore.instance;
-  }
-
   Future<void> _saveEntry(BuildContext context) async {
-    // save entry to database
-    if (_db == null) {
-      await _initDB();
-    }
-
     final task = _taskController.text;
     final tag = _tagController.text;
 
@@ -154,20 +143,19 @@ class _EntryInputPageState extends State<EntryInputPage> {
       to: toDateTime,
     );
 
-    await _db!
-        .collection('entries')
-        .withConverter(
-          fromFirestore: TimeEntry.fromFirestore,
-          toFirestore: (TimeEntry entry, options) => entry.toFirestore(),
-        )
-        .doc(widget.entry == null ? entry.id : widget.entry!.id)
-        .set(entry)
-        .then((_) {
+    _repository.saveEntry(entry, widget.entry).then((response) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Entry saved successfully'),
-        ));
-        Navigator.pop(context);
+        if (response.success!) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Entry saved successfully'),
+          ));
+          Navigator.pop(context);
+        } else {
+          print(response.error!);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Failed to save entry!'),
+          ));
+        }
       }
     });
   }

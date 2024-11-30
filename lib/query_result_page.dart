@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:task_management_app/data/repository.dart';
 import 'package:task_management_app/query_input_page.dart';
 import 'package:task_management_app/entry_input_page.dart';
-import 'package:task_management_app/time_entry.dart';
+import 'package:task_management_app/model/time_entry.dart';
 import 'package:task_management_app/time_entry_card.dart';
 
 class QueryResultPage extends StatefulWidget {
@@ -14,10 +14,9 @@ class QueryResultPage extends StatefulWidget {
 
 class _QueryResultPageState extends State<QueryResultPage> {
   // variables
+  final _repository = Repository();
   String? _query;
   String? _value;
-
-  FirebaseFirestore? _db;
   List<TimeEntry>? _entries;
 
   // lifecycle
@@ -27,32 +26,10 @@ class _QueryResultPageState extends State<QueryResultPage> {
     _getEntries();
   }
 
-  // modules
-  Future<void> _initDB() async {
-    _db = FirebaseFirestore.instance;
-  }
-
   Future<void> _getEntries() async {
-    if (_db == null) {
-      await _initDB();
-    }
-
-    Query<Map<String, dynamic>> query;
-
-    if (_query == null || _query!.isEmpty) {
-      query = _db!.collection('entries');
-    } else if (_query == 'date') {
-      Timestamp date = Timestamp.fromDate(DateTime.parse(_value!));
-      query = _db!.collection('entries').where(_query!, isEqualTo: date);
-    } else {
-      query = _db!.collection('entries').where(_query!, isEqualTo: _value);
-    }
-
-    await query.get().then((querySnapshot) {
+    _repository.getEntries(_query, _value).then((entries) {
       setState(() {
-        _entries = querySnapshot.docs
-            .map((doc) => TimeEntry.fromFirestore(doc, null))
-            .toList();
+        _entries = entries.entries;
       });
     });
   }
