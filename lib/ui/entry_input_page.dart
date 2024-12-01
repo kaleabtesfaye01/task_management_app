@@ -12,88 +12,99 @@ class EntryInputPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => EntryInputViewModel()..initialize(entry, context),
-      builder: (context, child) => Scaffold(
-        appBar: AppBar(title: const Text('Input Time Entry')),
+      builder: (context, child) =>  Scaffold(
+        appBar: AppBar(
+          title: const Text('New Time Entry'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.cancel),
+              onPressed: () => Navigator.pop(context),
+              tooltip: 'Cancel',
+            ),
+          ],
+        ),
         body: SafeArea(
           child: Consumer<EntryInputViewModel>(
             builder: (context, viewModel, _) {
-              return Column(
-                children: <Widget>[
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Task',
-                      border: OutlineInputBorder(),
-                    ),
-                    controller: viewModel.taskController,
-                  ),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () => viewModel.selectDate(context),
-                    child: AbsorbPointer(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Date',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today),
-                        ),
-                        controller: viewModel.dateController,
-                        readOnly: true,
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView(
+                  children: [
+                    TextField(
+                      controller: viewModel.taskController,
+                      decoration: const InputDecoration(
+                        labelText: 'Task Name',
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => viewModel.selectFromTime(context),
-                          child: AbsorbPointer(
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                labelText: 'From',
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.access_time),
-                              ),
-                              controller: viewModel.fromTimeController,
-                              readOnly: true,
-                            ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () => viewModel.selectDate(context),
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: viewModel.dateController,
+                          decoration: const InputDecoration(
+                            labelText: 'Date',
+                            border: OutlineInputBorder(),
+                            suffixIcon: Icon(Icons.calendar_today),
                           ),
                         ),
                       ),
-                      const Text('  -  '),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => viewModel.selectToTime(context),
-                          child: AbsorbPointer(
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                labelText: 'To',
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.access_time),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => viewModel.selectFromTime(context),
+                            child: AbsorbPointer(
+                              child: TextField(
+                                controller: viewModel.fromTimeController,
+                                decoration: const InputDecoration(
+                                  labelText: 'From Time',
+                                  border: OutlineInputBorder(),
+                                  suffixIcon: Icon(Icons.access_time),
+                                ),
                               ),
-                              controller: viewModel.toTimeController,
-                              readOnly: true,
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Tag',
-                      border: OutlineInputBorder(),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => viewModel.selectToTime(context),
+                            child: AbsorbPointer(
+                              child: TextField(
+                                controller: viewModel.toTimeController,
+                                decoration: const InputDecoration(
+                                  labelText: 'To Time',
+                                  border: OutlineInputBorder(),
+                                  suffixIcon: Icon(Icons.access_time),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    controller: viewModel.tagController,
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => viewModel.saveEntry(context, entry),
-                    child: const Text('Save Entry'),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: viewModel.tagController,
+                      decoration: const InputDecoration(
+                        labelText: 'Tag',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => viewModel.saveEntry(context),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      child: const Text('Save Entry'),
+                    ),
+                  ],
+                ),
               );
             },
           ),

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:task_management_app/data/repository.dart';
 import 'package:task_management_app/model/time_entry.dart';
 
 class EntryInputViewModel extends ChangeNotifier {
-  final _repository = Repository();
+  final Repository _repository = Repository();
 
-  final _taskController = TextEditingController();
-  final _tagController = TextEditingController();
-  final _dateController = TextEditingController();
-  final _fromTimeController = TextEditingController();
-  final _toTimeController = TextEditingController();
+  final TextEditingController _taskController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _fromTimeController = TextEditingController();
+  final TextEditingController _toTimeController = TextEditingController();
+
+  DateTime? _date;
+  TimeOfDay? _fromTime;
+  TimeOfDay? _toTime;
 
   TextEditingController get taskController => _taskController;
   TextEditingController get tagController => _tagController;
@@ -18,9 +21,7 @@ class EntryInputViewModel extends ChangeNotifier {
   TextEditingController get fromTimeController => _fromTimeController;
   TextEditingController get toTimeController => _toTimeController;
 
-  TimeOfDay? _fromTime;
-  TimeOfDay? _toTime;
-  DateTime? _date;
+  TimeEntry? _editEntry;
 
   void initialize(TimeEntry? entry, BuildContext context) {
     if (entry != null) {
@@ -30,9 +31,13 @@ class EntryInputViewModel extends ChangeNotifier {
 
       _taskController.text = entry.task;
       _tagController.text = entry.tag;
-      _dateController.text = DateFormat('yyyy-MM-dd').format(_date!);
+      _dateController.text = entry.date.toIso8601String().split('T').first;
       _fromTimeController.text = _fromTime!.format(context);
       _toTimeController.text = _toTime!.format(context);
+      _editEntry = entry;
+    } else {
+      _date = DateTime.now();
+      _dateController.text = _date!.toIso8601String().split('T').first;
     }
   }
 
@@ -45,7 +50,7 @@ class EntryInputViewModel extends ChangeNotifier {
     );
     if (picked != null) {
       _date = picked;
-      _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      _dateController.text = _date!.toIso8601String().split('T').first;
       notifyListeners();
     }
   }
@@ -74,14 +79,81 @@ class EntryInputViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> saveEntry(BuildContext context, TimeEntry? existingEntry) async {
-    if (_taskController.text.isEmpty ||
-        _tagController.text.isEmpty ||
-        _date == null ||
-        _fromTime == null ||
-        _toTime == null) {
+  String? validateInput() {
+    if (_taskController.text.isEmpty || _tagController.text.isEmpty) {
+      return 'Please fill in all fields.';
+    }
+    if (_fromTime == null || _toTime == null || _date == null) {
+      return 'Please select a valid date and time range.';
+    }
+    final fromDateTime = DateTime(
+      _date!.year,
+      _date!.month,
+      _date!.day,
+      _fromTime!.hour,
+      _fromTime!.minute,
+    );
+    final toDateTime = DateTime(
+      _date!.year,
+      _date!.month,
+      _date!.day,
+      _toTime!.hour,
+      _toTime!.minute,
+    );
+    if (fromDateTime.isAfter(toDateTime) ||
+        fromDateTime.isAtSameMomentAs(toDateTime)) {
+      return 'Start time must be earlier than end time.';
+    }
+    return null;
+  }
+
+  Future<bool> checkForOverlap() async {
+    List<TimeEntry> entries = [];
+    await _repository
+        .getEntries(null, null)
+        .then((response) => entries = response.entries!);
+    final fromDateTime = DateTime(
+      _date!.year,
+      _date!.month,
+      _date!.day,
+      _fromTime!.hour,
+      _fromTime!.minute,
+    );
+    final toDateTime = DateTime(
+      _date!.year,
+      _date!.month,
+      _date!.day,
+      _toTime!.hour,
+      _toTime!.minute,
+    );
+    for (final entry in entries) {
+      if (_editEntry != null && entry.id == _editEntry!.id) {
+        continue;
+      }
+      final entryStart = entry.from;
+      final entryEnd = entry.to;
+      if (fromDateTime.isBefore(entryEnd) && fromDateTime.isAfter(entryStart) ||
+          toDateTime.isBefore(entryEnd) && toDateTime.isAfter(entryStart) || 
+          fromDateTime.isAtSameMomentAs(entryStart) || toDateTime.isAtSameMomentAs(entryEnd)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<void> saveEntry(BuildContext context) async {
+    final validationError = validateInput();
+    if (validationError != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        SnackBar(content: Text(validationError)),
+      );
+      return;
+    }
+
+    if (await checkForOverlap() && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('The time overlaps with an existing entry.')),
       );
       return;
     }
@@ -93,7 +165,6 @@ class EntryInputViewModel extends ChangeNotifier {
       _fromTime!.hour,
       _fromTime!.minute,
     );
-
     final toDateTime = DateTime(
       _date!.year,
       _date!.month,
@@ -111,27 +182,28 @@ class EntryInputViewModel extends ChangeNotifier {
       to: toDateTime,
     );
 
-    final response = await _repository.saveEntry(entry, existingEntry);
+    final response = await _repository.saveEntry(entry, _editEntry);
     if (context.mounted) {
       if (response.success!) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Entry saved successfully')),
+          const SnackBar(content: Text('Entry saved successfully!')),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save entry!')),
+          const SnackBar(content: Text('Failed to save entry.')),
         );
       }
     }
+  }
 
-    void dispose() {
-      _taskController.dispose();
-      _tagController.dispose();
-      _dateController.dispose();
-      _fromTimeController.dispose();
-      _toTimeController.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _taskController.dispose();
+    _tagController.dispose();
+    _dateController.dispose();
+    _fromTimeController.dispose();
+    _toTimeController.dispose();
+    super.dispose();
   }
 }

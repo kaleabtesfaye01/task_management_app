@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class QueryInputViewModel extends ChangeNotifier {
-  final List<String> queryItems = <String>['Date', 'Task', 'Tag'];
-  String selectedQuery = 'Date';
+  final List<String> _queryTypes = ['Date', 'Task', 'Tag'];
+  String _selectedQueryType = 'Date';
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
+  List<String> get queryTypes => _queryTypes;
+  String get selectedQueryType => _selectedQueryType;
   TextEditingController get textController => _textController;
   TextEditingController get dateController => _dateController;
+
+  void updateSelectedQueryType(String type) {
+    _selectedQueryType = type;
+    notifyListeners();
+  }
 
   Future<void> selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -18,20 +25,38 @@ class QueryInputViewModel extends ChangeNotifier {
       lastDate: DateTime(2100),
     );
     if (picked != null) {
-      _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      dateController.text = DateFormat('yyyy-MM-dd').format(picked);
       notifyListeners();
     }
   }
 
-  @override
-  void dispose() {
-    _textController.dispose();
-    _dateController.dispose();
-    super.dispose();
+  String? validateInput() {
+    if (selectedQueryType == 'Date' && dateController.text.isEmpty) {
+      return 'Please select a date.';
+    }
+    if ((selectedQueryType == 'Task' || selectedQueryType == 'Tag') &&
+        textController.text.isEmpty) {
+      return 'Please enter a value for $selectedQueryType.';
+    }
+    return null;
   }
 
-  void updateQuery(String query) {
-    selectedQuery = query;
-    notifyListeners();
+  Map<String, String>? getQueryResult() {
+    final validationError = validateInput();
+    if (validationError != null) {
+      return null;
+    }
+
+    final value = selectedQueryType == 'Date'
+        ? dateController.text
+        : textController.text;
+    return {'query': selectedQueryType.toLowerCase(), 'value': value};
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    dateController.dispose();
+    super.dispose();
   }
 }

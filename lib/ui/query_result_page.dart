@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_management_app/ui/query_input_page.dart';
 import 'package:task_management_app/ui/entry_input_page.dart';
+import 'package:task_management_app/ui/query_input_page.dart';
 import 'package:task_management_app/ui/time_entry_card.dart';
 import 'package:task_management_app/util/query_result_view_model.dart';
 
@@ -14,8 +14,12 @@ class QueryResultPage extends StatelessWidget {
       create: (_) => QueryResultViewModel()..getEntries(),
       builder: (context, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('Query Result Page'),
-          actions: <Widget>[
+          title: const Text(
+            'Query Results',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
+          centerTitle: true,
+          actions: [
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: () async {
@@ -48,12 +52,29 @@ class QueryResultPage extends StatelessWidget {
         body: SafeArea(
           child: Consumer<QueryResultViewModel>(
             builder: (context, viewModel, _) {
+              if (viewModel.isLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
               final entries = viewModel.entries;
+
+              if (entries == null || entries.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No Results Found',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                );
+              }
+
               return ListView.builder(
-                itemCount: entries?.length ?? 0,
+                padding: const EdgeInsets.all(10),
+                itemCount: entries.length,
                 itemBuilder: (context, index) {
                   return TimeEntryCard(
-                    entry: entries![index],
+                    entry: entries[index],
                     onDelete: () async {
                       await viewModel.getEntries();
                     },
