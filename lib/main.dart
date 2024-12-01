@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:task_management_app/firebase_options.dart';
-import 'package:task_management_app/query_result_page.dart';
+import 'package:task_management_app/ui/query_result_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
