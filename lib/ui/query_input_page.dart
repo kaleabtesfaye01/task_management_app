@@ -7,12 +7,21 @@ class QueryInputPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ChangeNotifierProvider(
       create: (_) => QueryInputViewModel(),
-      builder: (context, child) =>  Scaffold(
+      builder: (context, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('Search Query'),
-          centerTitle: true,
+          title: Text(
+            'Search Query',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          backgroundColor: theme.scaffoldBackgroundColor,
+          elevation: 0,
         ),
         body: SafeArea(
           child: Consumer<QueryInputViewModel>(
@@ -22,39 +31,57 @@ class QueryInputPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    // Search By Label
+                    Text(
                       'Search By:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
+
+                    // Dropdown for Query Type
                     DropdownButtonFormField<String>(
                       value: viewModel.selectedQueryType,
                       items: viewModel.queryTypes
                           .map((type) => DropdownMenuItem(
                                 value: type,
-                                child: Text(type),
+                                child: Text(
+                                  type,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
                               ))
                           .toList(),
                       onChanged: (value) =>
                           viewModel.updateSelectedQueryType(value!),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        filled: true,
+                        fillColor: theme.colorScheme.surface,
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Date or Text Input
                     if (viewModel.selectedQueryType == 'Date')
                       GestureDetector(
                         onTap: () => viewModel.selectDate(context),
                         child: AbsorbPointer(
                           child: TextField(
                             controller: viewModel.dateController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Select Date',
-                              border: OutlineInputBorder(),
-                              suffixIcon: Icon(Icons.calendar_today),
+                              prefixIcon: Icon(
+                                Icons.calendar_today_outlined,
+                                color: theme.colorScheme.primary,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              filled: true,
+                              fillColor: theme.colorScheme.surface,
                             ),
                           ),
                         ),
@@ -64,10 +91,20 @@ class QueryInputPage extends StatelessWidget {
                         controller: viewModel.textController,
                         decoration: InputDecoration(
                           labelText: 'Enter ${viewModel.selectedQueryType}',
-                          border: const OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: theme.colorScheme.primary,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: theme.colorScheme.surface,
                         ),
                       ),
                     const Spacer(),
+
+                    // Submit and Cancel Buttons
                     Row(
                       children: [
                         Expanded(
@@ -76,8 +113,13 @@ class QueryInputPage extends StatelessWidget {
                               final queryResult = viewModel.getQueryResult();
                               if (queryResult == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please provide valid input.'),
+                                  SnackBar(
+                                    content: Text(
+                                      'Please provide valid input.',
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(color: theme.colorScheme.onPrimary),
+                                    ),
+                                    backgroundColor: theme.colorScheme.error,
                                   ),
                                 );
                                 return;
@@ -85,9 +127,21 @@ class QueryInputPage extends StatelessWidget {
                               Navigator.pop(context, queryResult);
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: theme.colorScheme.primary,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                            child: const Text('Submit'),
+                            child: Text(
+                              'Submit',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.onPrimary,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -95,9 +149,21 @@ class QueryInputPage extends StatelessWidget {
                           child: OutlinedButton(
                             onPressed: () => Navigator.pop(context),
                             style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              side: BorderSide(color: theme.colorScheme.primary),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
                             ),
-                            child: const Text('Cancel'),
+                            child: Text(
+                              'Cancel',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
                           ),
                         ),
                       ],

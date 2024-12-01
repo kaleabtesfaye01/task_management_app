@@ -10,22 +10,31 @@ class QueryResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ChangeNotifierProvider(
       create: (_) => QueryResultViewModel()..getEntries(),
       builder: (context, child) => Scaffold(
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             'Query Results',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           centerTitle: true,
+          backgroundColor: theme.scaffoldBackgroundColor,
+          elevation: 0,
           actions: [
             IconButton(
-              icon: const Icon(Icons.search),
+              icon: Icon(Icons.search, color: theme.colorScheme.primary),
               onPressed: () async {
                 final result = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const QueryInputPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const QueryInputPage(),
+                  ),
                 );
                 if (result != null && context.mounted) {
                   final viewModel = context.read<QueryResultViewModel>();
@@ -38,7 +47,7 @@ class QueryResultPage extends StatelessWidget {
               builder: (context, viewModel, _) => Visibility(
                 visible: viewModel.query != null || viewModel.value != null,
                 child: IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: Icon(Icons.clear, color: theme.colorScheme.error),
                   onPressed: () async {
                     final viewModel = context.read<QueryResultViewModel>();
                     viewModel.clearQuery();
@@ -53,24 +62,29 @@ class QueryResultPage extends StatelessWidget {
           child: Consumer<QueryResultViewModel>(
             builder: (context, viewModel, _) {
               if (viewModel.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: theme.colorScheme.primary,
+                  ),
                 );
               }
 
               final entries = viewModel.entries;
 
               if (entries == null || entries.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
                     'No Results Found',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onBackground.withOpacity(0.6),
+                    ),
                   ),
                 );
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 itemCount: entries.length,
                 itemBuilder: (context, index) {
                   return TimeEntryCard(
@@ -87,7 +101,7 @@ class QueryResultPage extends StatelessWidget {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
             await Navigator.push(
               context,
@@ -100,7 +114,14 @@ class QueryResultPage extends StatelessWidget {
               await viewModel.getEntries();
             }
           },
-          child: const Icon(Icons.add),
+          backgroundColor: theme.colorScheme.primary,
+          label: Text(
+            'Add Entry',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onPrimary,
+            ),
+          ),
+          icon: Icon(Icons.add, color: theme.colorScheme.onPrimary),
         ),
       ),
     );

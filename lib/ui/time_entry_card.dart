@@ -19,10 +19,12 @@ class TimeEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ChangeNotifierProvider(
       create: (_) => TimeEntryCardViewModel(),
-      builder: (context, child) =>  Card(
-        elevation: 4,
+      builder: (context, child) => Card(
+        elevation: 2,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -35,36 +37,67 @@ class TimeEntryCard extends StatelessWidget {
               // Task Name
               Text(
                 entry.task,
-                style: const TextStyle(
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
 
-              // Tag and Date Information
+              // Date and Tag
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Tag: ${entry.tag}',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  // Date
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today_outlined,
+                          size: 16,
+                          color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                      const SizedBox(width: 6),
+                      Text(
+                        DateFormat.yMMMd().format(entry.date),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onBackground.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    DateFormat.yMMMd().format(entry.date),
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  const Spacer(),
+
+                  // Tag
+                  Row(
+                    children: [
+                      Icon(Icons.label_outline,
+                          size: 16,
+                          color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                      const SizedBox(width: 6),
+                      Text(
+                        entry.tag,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onBackground.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
               const SizedBox(height: 8),
 
               // Time Range
-              Text(
-                'From: ${DateFormat.jm().format(entry.from)} - To: ${DateFormat.jm().format(entry.to)}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black87,
-                ),
+              Row(
+                children: [
+                  Icon(Icons.access_time_outlined,
+                      size: 16,
+                      color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${DateFormat.jm().format(entry.from)} - ${DateFormat.jm().format(entry.to)}',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 
@@ -72,7 +105,7 @@ class TimeEntryCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton.icon(
+                  ElevatedButton.icon(
                     onPressed: () async {
                       await Navigator.push(
                         context,
@@ -82,17 +115,40 @@ class TimeEntryCard extends StatelessWidget {
                       );
                       onEdit();
                     },
-                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    icon: const Icon(Icons.edit, size: 16),
                     label: const Text('Edit'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
+                      minimumSize: const Size(36, 36),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  Consumer<TimeEntryCardViewModel>(
-                    builder: (context, viewModel, _) => TextButton.icon(
-                      onPressed: () async {
-                        await viewModel.deleteEntry(context, entry, onDelete);
-                      },
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      label: const Text('Delete'),
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      await context.read<TimeEntryCardViewModel>().deleteEntry(context, entry, onDelete);
+                    },
+                    icon: Icon(Icons.delete_outline,
+                        size: 16, color: theme.colorScheme.error),
+                    label: Text(
+                      'Delete',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: theme.colorScheme.error),
+                      foregroundColor: theme.colorScheme.error,
+                      minimumSize: const Size(36, 36),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ],

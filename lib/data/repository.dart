@@ -42,7 +42,7 @@ class Repository {
       Timestamp date = Timestamp.fromDate(DateTime.parse(value!));
       query = _db.collection('entries').where(queryBy, isEqualTo: date);
     } else {
-      query = _db.collection('entries').where(queryBy, isEqualTo: queryBy);
+      query = _db.collection('entries').where(queryBy, isEqualTo: value);
     }
 
     try {
