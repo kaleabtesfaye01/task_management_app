@@ -18,6 +18,7 @@ macos/
 linux/
 ios/
 android/
+devtools_options.yaml
 
 # IntelliJ related
 *.iml
