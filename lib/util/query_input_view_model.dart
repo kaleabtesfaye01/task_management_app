@@ -14,6 +14,7 @@ class QueryInputViewModel extends ChangeNotifier {
 
   void updateSelectedQueryType(String type) {
     _selectedQueryType = type;
+    _textController.text = '';
     notifyListeners();
   }
 

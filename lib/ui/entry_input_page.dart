@@ -50,6 +50,7 @@ class EntryInputPage extends StatelessWidget {
                       child: AbsorbPointer(
                         child: TextField(
                           controller: viewModel.dateController,
+                          readOnly: true,
                           decoration: InputDecoration(
                             labelText: 'Date',
                             prefixIcon: Icon(Icons.calendar_today, color: theme.colorScheme.primary),
@@ -68,6 +69,7 @@ class EntryInputPage extends StatelessWidget {
                             child: AbsorbPointer(
                               child: TextField(
                                 controller: viewModel.fromTimeController,
+                                readOnly: true,
                                 decoration: InputDecoration(
                                   labelText: 'Start Time',
                                   prefixIcon: Icon(Icons.access_time, color: theme.colorScheme.primary),
@@ -83,6 +85,7 @@ class EntryInputPage extends StatelessWidget {
                             child: AbsorbPointer(
                               child: TextField(
                                 controller: viewModel.toTimeController,
+                                readOnly: true,
                                 decoration: InputDecoration(
                                   labelText: 'End Time',
                                   prefixIcon: Icon(Icons.access_time, color: theme.colorScheme.primary),

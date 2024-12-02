@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:task_management_app/data/repository.dart';
-import 'package:task_management_app/model/time_entry.dart';
 
 class TimeEntryCardViewModel extends ChangeNotifier {
-  final Repository _repository = Repository();
+  final Repository _repository;
+
+  TimeEntryCardViewModel({Repository? repository}) : _repository = repository ?? Repository();
 
   Future<void> deleteEntry(
-      BuildContext context, TimeEntry entry, VoidCallback onDelete) async {
-    final response = await _repository.deleteEntry(entry.id);
+      BuildContext context, String id, VoidCallback onDelete) async {
+    final response = await _repository.deleteEntry(id);
     if (context.mounted) {
       if (response.success) {
         onDelete();

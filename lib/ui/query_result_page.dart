@@ -77,14 +77,15 @@ class QueryResultPage extends StatelessWidget {
                     'No Results Found',
                     style: theme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onBackground.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 );
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
+                    .copyWith(bottom: 80),
                 itemCount: entries.length,
                 itemBuilder: (context, index) {
                   return TimeEntryCard(

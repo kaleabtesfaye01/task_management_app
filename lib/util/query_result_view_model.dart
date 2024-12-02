@@ -3,7 +3,10 @@ import 'package:task_management_app/data/repository.dart';
 import 'package:task_management_app/model/time_entry.dart';
 
 class QueryResultViewModel extends ChangeNotifier {
-  final Repository _repository = Repository();
+  final Repository _repository;
+
+  QueryResultViewModel({Repository? repository}) : _repository = repository ?? Repository();
+
   String? _query;
   String? _value;
   List<TimeEntry>? _entries;

@@ -5,7 +5,9 @@ import 'package:task_management_app/data/model/save_entry_response.dart';
 import 'package:task_management_app/model/time_entry.dart';
 
 class Repository {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  Repository({FirebaseFirestore? db}): _db = db ?? FirebaseFirestore.instance;
 
   Future<SaveEntryResponse> saveEntry(TimeEntry entry, TimeEntry? oldEntry) async {
     try {
@@ -25,7 +27,10 @@ class Repository {
 
   Future<DeleteEntryResponse> deleteEntry(String id) async {
     try {
-      await _db.collection('entries').doc(id).delete();
+      await _db.collection('entries').withConverter(
+            fromFirestore: TimeEntry.fromFirestore,
+            toFirestore: (TimeEntry entry, options) => entry.toFirestore(),
+          ).doc(id).delete();
       return DeleteEntryResponse.success();
     } catch (error) {
       return DeleteEntryResponse.error(error.toString());

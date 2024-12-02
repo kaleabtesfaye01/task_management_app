@@ -71,6 +71,7 @@ class QueryInputPage extends StatelessWidget {
                         child: AbsorbPointer(
                           child: TextField(
                             controller: viewModel.dateController,
+                            readOnly: true,
                             decoration: InputDecoration(
                               labelText: 'Select Date',
                               prefixIcon: Icon(

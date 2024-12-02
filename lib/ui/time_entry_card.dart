@@ -53,12 +53,12 @@ class TimeEntryCard extends StatelessWidget {
                     children: [
                       Icon(Icons.calendar_today_outlined,
                           size: 16,
-                          color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6)),
                       const SizedBox(width: 6),
                       Text(
                         DateFormat.yMMMd().format(entry.date),
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onBackground.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -70,12 +70,12 @@ class TimeEntryCard extends StatelessWidget {
                     children: [
                       Icon(Icons.label_outline,
                           size: 16,
-                          color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6)),
                       const SizedBox(width: 6),
                       Text(
                         entry.tag,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onBackground.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -89,7 +89,7 @@ class TimeEntryCard extends StatelessWidget {
                 children: [
                   Icon(Icons.access_time_outlined,
                       size: 16,
-                      color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                      color: theme.colorScheme.onSurface.withOpacity(0.6)),
                   const SizedBox(width: 6),
                   Text(
                     '${DateFormat.jm().format(entry.from)} - ${DateFormat.jm().format(entry.to)}',
@@ -130,7 +130,7 @@ class TimeEntryCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   OutlinedButton.icon(
                     onPressed: () async {
-                      await context.read<TimeEntryCardViewModel>().deleteEntry(context, entry, onDelete);
+                      await context.read<TimeEntryCardViewModel>().deleteEntry(context, entry.id, onDelete);
                     },
                     icon: Icon(Icons.delete_outline,
                         size: 16, color: theme.colorScheme.error),

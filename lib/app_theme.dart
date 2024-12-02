@@ -10,7 +10,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: _colorScheme,
-      scaffoldBackgroundColor: _colorScheme.background,
+      scaffoldBackgroundColor: _colorScheme.surface,
       appBarTheme: _appBarTheme,
       cardTheme: _cardTheme,
       elevatedButtonTheme: _elevatedButtonTheme,
@@ -28,9 +28,7 @@ class AppTheme {
     secondary: Color(0xFF5BC0EB), // Soft teal blue
     onSecondary: Colors.white,
     error: Color(0xFFFF6B6B), // Warm coral red
-    onError: Colors.white,
-    background: Color(0xFFF4F8FB), // Light blue-gray
-    onBackground: Color(0xFF2C3E50), // Rich dark blue-gray
+    onError: Colors.white, // Rich dark blue-gray
     surface: Color(0xFFFFFFFF), // White
     onSurface: Color(0xFF34495E), // Neutral dark blue for text
   );
@@ -38,15 +36,15 @@ class AppTheme {
   // AppBar Theme
   static final AppBarTheme _appBarTheme = AppBarTheme(
     backgroundColor: Colors.transparent,
-    foregroundColor: _colorScheme.onBackground,
+    foregroundColor: _colorScheme.onSurface,
     elevation: 0,
     centerTitle: true,
     titleTextStyle: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w600,
-      color: _colorScheme.onBackground,
+      color: _colorScheme.onSurface,
     ),
-    iconTheme: IconThemeData(color: _colorScheme.onBackground),
+    iconTheme: IconThemeData(color: _colorScheme.onSurface),
   );
 
   // Card Theme
@@ -115,7 +113,7 @@ class AppTheme {
       borderRadius: BorderRadius.circular(_borderRadius),
       borderSide: BorderSide(color: _colorScheme.error, width: 2),
     ),
-    labelStyle: TextStyle(color: _colorScheme.onBackground.withOpacity(0.6)),
+    labelStyle: TextStyle(color: _colorScheme.onSurface.withOpacity(0.6)),
     contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
   );
 

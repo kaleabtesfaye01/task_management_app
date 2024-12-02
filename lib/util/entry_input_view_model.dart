@@ -3,7 +3,9 @@ import 'package:task_management_app/data/repository.dart';
 import 'package:task_management_app/model/time_entry.dart';
 
 class EntryInputViewModel extends ChangeNotifier {
-  final Repository _repository = Repository();
+  final Repository _repository;
+
+  EntryInputViewModel({Repository? repository}) : _repository = repository ?? Repository();
 
   final TextEditingController _taskController = TextEditingController();
   final TextEditingController _tagController = TextEditingController();
@@ -35,10 +37,7 @@ class EntryInputViewModel extends ChangeNotifier {
       _fromTimeController.text = _fromTime!.format(context);
       _toTimeController.text = _toTime!.format(context);
       _editEntry = entry;
-    } else {
-      _date = DateTime.now();
-      _dateController.text = _date!.toIso8601String().split('T').first;
-    }
+  }
   }
 
   Future<void> selectDate(BuildContext context) async {
