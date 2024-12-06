@@ -1,0 +1,163 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "2.02",
+  "elapsed_seconds"    : 28.3753840923309,
+  "n_files"            : 6775,
+  "n_lines"            : 1372094,
+  "files_per_second"   : 238.763287853823,
+  "lines_per_second"   : 48355.081134244},
+"C/C++ Header" :{
+  "nFiles": 2408,
+  "blank": 57843,
+  "comment": 128989,
+  "code": 351006},
+"C++" :{
+  "nFiles": 1014,
+  "blank": 34013,
+  "comment": 44804,
+  "code": 264300},
+"D" :{
+  "nFiles": 1930,
+  "blank": 0,
+  "comment": 0,
+  "code": 190163},
+"C" :{
+  "nFiles": 709,
+  "blank": 19901,
+  "comment": 27221,
+  "code": 128065},
+"XML" :{
+  "nFiles": 312,
+  "blank": 1001,
+  "comment": 81,
+  "code": 66818},
+"JSON" :{
+  "nFiles": 131,
+  "blank": 6,
+  "comment": 0,
+  "code": 21475},
+"Objective-C++" :{
+  "nFiles": 41,
+  "blank": 1192,
+  "comment": 910,
+  "code": 4785},
+"Markdown" :{
+  "nFiles": 17,
+  "blank": 1152,
+  "comment": 0,
+  "code": 4730},
+"Dart" :{
+  "nFiles": 29,
+  "blank": 354,
+  "comment": 121,
+  "code": 4065},
+"Swift" :{
+  "nFiles": 48,
+  "blank": 1003,
+  "comment": 1956,
+  "code": 3731},
+"Objective-C" :{
+  "nFiles": 43,
+  "blank": 606,
+  "comment": 727,
+  "code": 2757},
+"Text" :{
+  "nFiles": 20,
+  "blank": 5,
+  "comment": 0,
+  "code": 1647},
+"Pascal" :{
+  "nFiles": 13,
+  "blank": 356,
+  "comment": 2224,
+  "code": 910},
+"PHP" :{
+  "nFiles": 10,
+  "blank": 229,
+  "comment": 557,
+  "code": 546},
+"CMake" :{
+  "nFiles": 7,
+  "blank": 82,
+  "comment": 110,
+  "code": 346},
+"Bourne Shell" :{
+  "nFiles": 7,
+  "blank": 30,
+  "comment": 28,
+  "code": 218},
+"GLSL" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 0,
+  "code": 126},
+"Bourne Again Shell" :{
+  "nFiles": 1,
+  "blank": 19,
+  "comment": 20,
+  "code": 121},
+"YAML" :{
+  "nFiles": 9,
+  "blank": 17,
+  "comment": 82,
+  "code": 108},
+"Gradle" :{
+  "nFiles": 3,
+  "blank": 12,
+  "comment": 10,
+  "code": 71},
+"Windows Resource File" :{
+  "nFiles": 1,
+  "blank": 23,
+  "comment": 29,
+  "code": 69},
+"DOS Batch" :{
+  "nFiles": 1,
+  "blank": 24,
+  "comment": 2,
+  "code": 64},
+"Fortran 77" :{
+  "nFiles": 1,
+  "blank": 2,
+  "comment": 0,
+  "code": 56},
+"Java" :{
+  "nFiles": 3,
+  "blank": 5,
+  "comment": 15,
+  "code": 37},
+"Properties" :{
+  "nFiles": 10,
+  "blank": 0,
+  "comment": 5,
+  "code": 33},
+"Ruby" :{
+  "nFiles": 2,
+  "blank": 2,
+  "comment": 12,
+  "code": 22},
+"HTML" :{
+  "nFiles": 1,
+  "blank": 7,
+  "comment": 12,
+  "code": 19},
+"Kotlin" :{
+  "nFiles": 1,
+  "blank": 2,
+  "comment": 0,
+  "code": 3},
+"SQL" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 0,
+  "code": 2},
+"SVG" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 0,
+  "code": 0},
+"SUM": {
+  "blank": 117886,
+  "comment": 207915,
+  "code": 1046293,
+  "nFiles": 6775} }
