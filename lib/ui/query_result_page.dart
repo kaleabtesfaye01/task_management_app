@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management_app/ui/entry_input_page.dart';
 import 'package:task_management_app/ui/query_input_page.dart';
+import 'package:task_management_app/ui/reports_page.dart';
 import 'package:task_management_app/ui/time_entry_card.dart';
 import 'package:task_management_app/util/query_result_view_model.dart';
 
@@ -102,27 +103,51 @@ class QueryResultPage extends StatelessWidget {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const EntryInputPage(),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton.extended(
+              onPressed: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ReportsPage(),
+                  ),
+                );
+              },
+              backgroundColor: theme.colorScheme.primary,
+              label: Text(
+                'Generate Report',
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                ),
               ),
-            );
-            if (context.mounted) {
-              final viewModel = context.read<QueryResultViewModel>();
-              await viewModel.getEntries();
-            }
-          },
-          backgroundColor: theme.colorScheme.primary,
-          label: Text(
-            'Add Entry',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onPrimary,
+              icon: Icon(Icons.article, color: theme.colorScheme.onPrimary),
             ),
-          ),
-          icon: Icon(Icons.add, color: theme.colorScheme.onPrimary),
+            const SizedBox(width: 16),
+            FloatingActionButton.extended(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EntryInputPage(),
+                  ),
+                );
+                if (context.mounted) {
+                  final viewModel = context.read<QueryResultViewModel>();
+                  await viewModel.getEntries();
+                }
+              },
+              backgroundColor: theme.colorScheme.primary,
+              label: Text(
+                'Add Entry',
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                ),
+              ),
+              icon: Icon(Icons.add, color: theme.colorScheme.onPrimary),
+            ),
+          ],
         ),
       ),
     );
