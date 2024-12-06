@@ -23,6 +23,12 @@ class QueryResultViewModel extends ChangeNotifier {
 
     final result = await _repository.getEntries(_query, _value);
     _entries = result.entries;
+
+    // sort entries by date
+    _entries?.sort((a, b) => a.date.compareTo(b.date));
+    // sort entries by time
+    _entries?.sort((a, b) => a.from.compareTo(b.from));
+
     
     _isLoading = false;
     notifyListeners();

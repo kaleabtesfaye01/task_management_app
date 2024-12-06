@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management_app/ui/entry_input_page.dart';
 import 'package:task_management_app/ui/query_input_page.dart';
 import 'package:task_management_app/ui/reports_page.dart';
+import 'package:task_management_app/ui/time_analysis_page.dart';
 import 'package:task_management_app/ui/time_entry_card.dart';
 import 'package:task_management_app/util/query_result_view_model.dart';
 
@@ -103,11 +105,26 @@ class QueryResultPage extends StatelessWidget {
             },
           ),
         ),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        floatingActionButton: SpeedDial(
+          icon: Icons.menu,
+          activeIcon: Icons.close,
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.onPrimary,
+          buttonSize: const Size(56.0, 56.0),
+          childrenButtonSize: const Size(56.0, 56.0),
+          spaceBetweenChildren: 12.0, // Adjust spacing between buttons
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
           children: [
-            FloatingActionButton.extended(
-              onPressed: () async{
+            // Generate Report Button
+            SpeedDialChild(
+              label: 'Generate Report',
+              labelStyle: theme.textTheme.bodyMedium,
+              labelBackgroundColor: theme.colorScheme.surface,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              child: const Icon(Icons.article),
+              onTap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -115,18 +132,33 @@ class QueryResultPage extends StatelessWidget {
                   ),
                 );
               },
-              backgroundColor: theme.colorScheme.primary,
-              label: Text(
-                'Generate Report',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onPrimary,
-                ),
-              ),
-              icon: Icon(Icons.article, color: theme.colorScheme.onPrimary),
             ),
-            const SizedBox(width: 16),
-            FloatingActionButton.extended(
-              onPressed: () async {
+            // Analyze Time Button
+            SpeedDialChild(
+              label: 'Analyze Time',
+              labelStyle: theme.textTheme.bodyMedium,
+              labelBackgroundColor: theme.colorScheme.surface,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              child: const Icon(Icons.pie_chart),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TimeAnalysisPage(),
+                  ),
+                );
+              },
+            ),
+            // Add Entry Button
+            SpeedDialChild(
+              label: 'Add Entry',
+              labelStyle: theme.textTheme.bodyMedium,
+              labelBackgroundColor: theme.colorScheme.surface,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              child: const Icon(Icons.add),
+              onTap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -138,14 +170,6 @@ class QueryResultPage extends StatelessWidget {
                   await viewModel.getEntries();
                 }
               },
-              backgroundColor: theme.colorScheme.primary,
-              label: Text(
-                'Add Entry',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onPrimary,
-                ),
-              ),
-              icon: Icon(Icons.add, color: theme.colorScheme.onPrimary),
             ),
           ],
         ),

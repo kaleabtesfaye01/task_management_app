@@ -10,6 +10,9 @@ Welcome to the Task Management App! This user manual will guide you through the 
     git clone <repository_url>
     ```
 3. Navigate to the project directory:
+    ```bash
+    cd <project directory>
+    ```
 4. Get the dependencies:
     ```bash
     flutter pub get
